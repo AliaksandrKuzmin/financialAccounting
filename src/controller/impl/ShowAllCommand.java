@@ -1,21 +1,36 @@
 package controller.impl;
 
 import controller.Command;
-import logic.Logic;
-import logic.LogicException;
-import logic.LogicProvider;
+import logic.RecordLogic;
+
+import java.util.Map;
 
 public class ShowAllCommand implements Command {
 
-    private final Logic logic = LogicProvider.getInstance();
+    private final RecordLogic logic;
+
+    public ShowAllCommand(RecordLogic logic) {
+        this.logic = logic;
+    }
 
     @Override
-    public String execute(String request) {
+    public String execute(Map<String, String> params) {
         try {
-            return logic.showAll();
-        } catch (LogicException e) {
-            return "Ошибка при выводе всех записей: " + e.getMessage();
+            var records = logic.showAll();
+
+            if (records.isEmpty()) {
+                return "Записей пока нет.";
+            }
+
+            StringBuilder sb = new StringBuilder("Все записи:\n");
+            for (var r : records) {
+                sb.append(r).append("\n");
+            }
+
+            return sb.toString();
+
+        } catch (Exception e) {
+            return "Ошибка: " + e.getMessage();
         }
     }
 }
-

@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.Map;
+
 public interface Command {
-    String execute(String request);
+    String execute(Map<String, String> params);
 }
+

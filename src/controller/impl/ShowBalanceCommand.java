@@ -1,20 +1,30 @@
 package controller.impl;
 
 import controller.Command;
-import logic.Logic;
+import logic.RecordLogic;
 import logic.LogicException;
-import logic.LogicProvider;
+
+import java.util.Map;
 
 public class ShowBalanceCommand implements Command {
 
-    private final Logic logic = LogicProvider.getInstance();
+    private final RecordLogic logic;
+
+    public ShowBalanceCommand(RecordLogic logic) {
+        this.logic = logic;
+    }
 
     @Override
-    public String execute(String request) {
+    public String execute(Map<String, String> params) {
         try {
-            return logic.showBalance();
+            double balance = logic.showBalance();
+            return "Текущий баланс: " + balance;
+
         } catch (LogicException e) {
-            return "Ошибка при вычислении баланса: " + e.getMessage();
+            return "Ошибка логики: " + e.getMessage();
+
+        } catch (Exception e) {
+            return "Ошибка: " + e.getMessage();
         }
     }
 }

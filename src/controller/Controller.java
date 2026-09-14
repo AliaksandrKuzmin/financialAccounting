@@ -1,19 +1,30 @@
 package controller;
+import java.util.Map;
 
 public class Controller {
-    private final CommandProvider provider = new CommandProvider();
 
-    public String executeTask(String request) {
-        String commandName = request.split("\n")[0].trim();
-        CommandName name;
+    private final CommandProvider provider;
 
-        try {
-            name = CommandName.valueOf(commandName);
-        } catch (IllegalArgumentException e) {
-            name = CommandName.UNKNOWN;
+    public Controller(CommandProvider provider) {
+        this.provider = provider;
+    }
+
+    public String doAction(String request) {
+
+        if (request == null || request.isBlank()) {
+            return "Ошибка: пустой запрос.";
         }
 
-        Command command = provider.getCommand(name);
-        return command.execute(request);
+        String[] parts = request.split("\n", 2);
+        String commandName = parts[0].trim();
+        String paramsBlock = parts.length > 1 ? parts[1] : "";
+
+        Command command = provider.getCommand(commandName);
+
+        Map<String, String> params = RequestParser.parse(paramsBlock);
+
+        return command.execute(params);
     }
+
 }
+

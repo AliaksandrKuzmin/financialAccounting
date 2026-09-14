@@ -1,8 +1,8 @@
 package logic;
 
-public class LogicException extends Exception {
-    public LogicException(String message, Throwable cause) {
-        super(message, cause);
+public class LogicException extends RuntimeException {
+    public LogicException(String message, Throwable exception) {
+        super(message, exception);
     }
 
     public LogicException(String message) {
